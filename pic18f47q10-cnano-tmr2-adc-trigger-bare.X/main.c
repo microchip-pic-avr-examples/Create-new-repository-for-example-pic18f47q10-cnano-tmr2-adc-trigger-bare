@@ -34,68 +34,64 @@
 
 volatile uint16_t adcVal;
 
-static void CLK_init(void);
-static void PORT_init(void);
-static void ADCC_init(void);
-static void TMR2_init(void);
-static void INTERRUPT_init(void);
-static uint16_t ADCC_readValue(uint8_t);
-static void ADCC_interrupt(void);
+static void CLK_Initialize(void);
+static void PORT_Initialize(void);
+static void ADCC_Initialize(void);
+static void TMR2_Initialize(void);
+static void INTERRUPT_Initialize(void);
+static uint16_t ADCC_ReadValue(uint8_t);
+static void ADCC_Interrupt(void);
 
-static void CLK_init(void)
+static void CLK_Initialize(void)
 {
     /* set HFINTOSC Oscillator */  
-    OSCCON1 = _OSCCON1_NOSC1_MASK | _OSCCON1_NOSC2_MASK;
+    OSCCON1 = 0x60;
     /* set HFFRQ to 1 MHz */
-    OSCFRQ = ~_OSCFREQ_HFFRQ_MASK;
+    OSCFRQ = 0x00;
 }
 
-static void PORT_init(void)
+static void PORT_Initialize(void)
 {
-    /* Set RA0 pin as analog */
-    ANSELA |= _ANSELA_ANSELA0_MASK;
-    /* Set RA0 pin as input  */
-    TRISA |= _TRISA_TRISA0_MASK;
+    /* Set RE0 digital input buffer disabled */
+    ANSELE = 0x06;
     /* Set RE0 pin as output */
-    TRISE &= ~_TRISE_TRISE0_MASK;
+    TRISE = 0x06;
 }
 
-static void ADCC_init(void)
+static void ADCC_Initialize(void)
 {
     /* ADACT Auto-Conversion Trigger Source is TMR2 */ 
-    ADACT |= _ADACT_ADACT2_MASK;
+    ADACT = 0x04;
     /* ADGO stop; ADFM right; ADON enabled; ADCONT disabled; ADCS FRC */
-    ADCON0 = _ADCON0_ADON_MASK     /* Enable ADCC module */
-           | _ADCON0_ADCS_MASK     /* Select FRC clock */
-           | _ADCON0_ADFM_MASK;    /* Result right justified */
+    ADCON0 = 0x94;
     /* Clear the ADCC interrupt flag */
-    PIR1 &= ~_PIR1_ADIF_MASK;    
+    PIR1bits.ADIF = 0;
     /* Enabling ADCC interrupt flag */
-    PIE1 |= _PIE1_ADIE_MASK;
+    PIE1bits.ADIE = 1;
 }
 
-static void TMR2_init(void)
+static void TMR2_Initialize(void)
 {
     /* TMR2 Clock source, LFINTOSC (00100) has 31 kHz */
-    T2CLKCON |= _T2CLKCON_CS2_MASK;
-    /* T2PSYNC Not Synchronized; T2MODE Starts at T2ON = 1 and TMR2_ers = 0; T2CKPOL Rising Edge */
-    T2HLT = 0; 
+    T2CLKCON = 0x04;
+    /* T2PSYNC Not Synchronized, T2MODE Software control, T2CKPOL Rising Edge */
+    T2HLT = 0x00; 
     /* TMR2ON on; T2CKPS Prescaler 1:64; T2OUTPS Postscaler 1:1 
        Minimum timer period is 31 kHz/64 = 2.064516 ms  */
-    T2CON |= _T0CON1_T0CS_MASK;
+    T2CON = 0xE0;
     /* Set TMR2 period, PR2 to 100ms */
     T2PR = Timer2Period;
     /* Clear the TMR2 interrupt flag */
-    PIR4 &= ~_PIR4_TMR2IF_MASK;
+    PIR4bits.TMR2IF = 0;
 }
 
-static void INTERRUPT_init(void)
+static void INTERRUPT_Initialize(void)
 {
-    INTCON = _INTCON_GIE_MASK           /* Enable Global Interrupts */
-           | _INTCON_PEIE_MASK;         /* Enable Peripheral Interrupts */   
+    INTCONbits.GIE  = 1;          /* Enable Global Interrupts */
+    INTCONbits.PEIE = 1;          /* Enable Peripheral Interrupts */
 }
 
-static uint16_t ADCC_readValue(uint8_t channel)
+static uint16_t ADCC_ReadValue(uint8_t channel)
 {   
     ADPCH = channel;     /* Set the input channel for ADCC */
     /* TMR2 is trigger source for auto-conversion for ADCC */
@@ -104,40 +100,40 @@ static uint16_t ADCC_readValue(uint8_t channel)
 
 static void __interrupt() INTERRUPT_InterruptManager(void)
 {
-    if (INTCON & _INTCON_PEIE_MASK)
+    if (INTCONbits.PEIE == 1)
     {
-        if ((PIE1 & _PIE1_ADIE_MASK) && (PIR1 & _PIR1_ADIF_MASK))
+        if (PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
         {
-            ADCC_interrupt();
+            ADCC_Interrupt();
         } 
     }
 }
 
-static void ADCC_interrupt(void)
+static void ADCC_Interrupt(void)
 {
     /* Clear the ADCC interrupt flag */
-    PIR1 &= ~_PIR1_ADIF_MASK;
+    PIR1bits.ADIF = 0;
     /* Toggle LED0 at the Timer2Period frequency */
-    LATE ^= _LATE_LATE0_MASK;
+    LATEbits.LATE0 = ~LATEbits.LATE0;
     /* Get the conversion result from ADCC AnalogChannel */
-    adcVal = ADCC_readValue(AnalogChannel);
+    adcVal = ADCC_ReadValue(AnalogChannel);
 }
 
 void main(void)
 {
     /* Initialize the device */
-    CLK_init();             /* Oscillator init function */
-    PORT_init();            /* Port init function */
-    ADCC_init();            /* ADCC init function */
-    TMR2_init();            /* TMR2 init function */
-    INTERRUPT_init();       /* Interrupt init function */
+    CLK_Initialize();             /* Oscillator Initialize function */
+    PORT_Initialize();            /* Port Initialize function */
+    ADCC_Initialize();            /* ADCC Initialize function */
+    TMR2_Initialize();            /* TMR2 Initialize function */
+    INTERRUPT_Initialize();       /* Interrupt Initialize function */
 
     while (1)
     {
         if (adcVal > DesiredThreshold)
         {
             /* turn LED0 ON by writing pin RE0 to low */
-            LATE &= ~_LATE_LATE0_MASK;
+            LATEbits.LATE0 = 0;
         }
     }
 }
