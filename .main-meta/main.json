@@ -3,27 +3,27 @@
     "category": "com.microchip.ide.project",
     "content": {
         "metaDataVersion": "1.1.0",
-        "name": "com.microchip.mcu8.mplabx.project.",
-        "version": " ",
-        "displayName": "  ",
-        "projectName": "",
-        "shortDescription": "",
+        "name": "com.microchip.mcu8.mplabx.project.pic18f47q10-cnano-tmr2-adc-trigger-bare",
+        "version": "1.0.1",
+        "displayName": "Using TMR2 as Auto-conversion trigger for ADCC module",
+        "projectName": "pic18f47q10-cnano-tmr2-adc-trigger-bare",
+        "shortDescription": "In this demo, uses TMR2 peripheral to trigger the ADCC to make conversions at a fixed frequency rate, that can be adjusted with the period of TMR2.",
         "ide": {
-            "name": "",
-            "semverRange": ""
+            "name": "MPLAB X",
+            "semverRange": ">=5.30.0"
         },
         "compiler": [
 			{
-				"name": "",
-				"semverRange": ""
+				"name": "XC8",
+				"semverRange": "^2.10.0"
 			}
 		],
         "dfp": {
-            "name": "",
-            "semverRange": ""
+            "name": "PIC18F-Q_DFP",
+            "semverRange": "^1.3.89"
         },
         "configurator": {
-            "name": "",
+            "name": "N/A",
             "semverRange": ""
         },
         "device": {
@@ -32,26 +32,26 @@
             "content": {
                 "metaDataVersion": "1.0.0",
                 "category": "com.microchip.device",
-                "name": "",
+                "name": "PIC18F47Q10",
                 "versionRange": "*"
             }
         },
-        "author": "",
+        "author": "Microchip",
         "subcategories": [
-            "",
+            "Peripherals",
             [
-               "Peripherals", ""
-            ],
-            [
-               "Peripherals", ""
-            ]            			
+               "Peripherals", "TIMER", "TMR2"
+            ]           			
         ],
         "peripherals": [
-            "",""
+            "TIMER", "TMR2"
         ],
         "keywords": [
-            "",
-            ""			
+            "Getting Started",
+			"Timers/Counters",
+            "Timer/Counter",
+            "Conversion",
+            "Bare Metal"
         ],
 		"additionalData": {
 			"longDescription": {

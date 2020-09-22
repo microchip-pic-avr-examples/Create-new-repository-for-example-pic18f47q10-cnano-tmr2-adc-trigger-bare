@@ -6,9 +6,10 @@ The PIC18F47Q10 features Three 8-bit Timers/Counters and a 10-bit ADC with compu
 In this demo, uses TMR2 peripheral to trigger the ADCC to make conversions at a fixed frequency rate, that can be adjusted with the period of TMR2.
 
 ## Related Documentation
-- Technical Brief Link [(linkTBD)](http://www.microchip.com/)
+- [TB3285 - Getting Started with Timers/Counters on PIC18](https://www.microchip.com/wwwappnotes/appnotes.aspx?appnote=en1003329)
 - [PIC18F47Q10 Product Family Page](https://www.microchip.com/design-centers/8-bit/pic-mcus/device-selection/PIC18F47Q10)
-- [PIC18F47Q10 datasheet](http://ww1.microchip.com/downloads/en/DeviceDoc/40002043D.pdf) for more information or specifications.
+- [PIC18F47Q10 datasheet](http://ww1.microchip.com/downloads/en/DeviceDoc/40002043D.pdf)
+- [TB3261 - PIC1000: Getting Started with Writing C-Code for PIC16 and PIC18](https://www.microchip.com/wwwappnotes/appnotes.aspx?appnote=en1002117)
 
 ## Software Used
 
