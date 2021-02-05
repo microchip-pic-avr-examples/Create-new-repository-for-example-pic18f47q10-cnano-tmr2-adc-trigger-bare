@@ -4,7 +4,7 @@
     "content": {
         "metaDataVersion": "1.1.0",
         "name": "com.microchip.mcu8.mplabx.project.pic18f47q10-cnano-tmr2-adc-trigger-bare",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "displayName": "Using TMR2 as Auto-conversion trigger for ADCC module",
         "projectName": "pic18f47q10-cnano-tmr2-adc-trigger-bare",
         "shortDescription": "In this demo, uses TMR2 peripheral to trigger the ADCC to make conversions at a fixed frequency rate, that can be adjusted with the period of TMR2.",
@@ -39,17 +39,16 @@
         "author": "Microchip",
         "subcategories": [
             [
-               "Peripherals", "TIMER", "TMR2"
+               "Peripherals",
+			   "TMR2"
             ]           			
         ],
         "peripherals": [
-            "TIMER", "TMR2"
+            "TMR2"
         ],
         "keywords": [
             "Getting Started",
 			"Timers/Counters",
-            "Timer/Counter",
-            "Conversion",
             "Bare Metal"
         ],
 		"additionalData": {
